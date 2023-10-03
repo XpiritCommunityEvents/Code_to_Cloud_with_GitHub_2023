@@ -6,9 +6,7 @@ on:
       githubhandle: 
         required: true
         type: text
-
-permissions: 
-  
+ 
   
 jobs:
   build:
@@ -20,7 +18,7 @@ jobs:
 
     - name: Create Repository
       env:
-        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Get the repository name from the input parameter
         gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
