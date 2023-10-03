@@ -51,16 +51,18 @@ jobs:
           # Set variables
           RESOURCE_GROUP_NAME=rg-${{ github.event.inputs.githubhandle }}
           APP_SERVICE_PLAN_NAME=plan-${{ github.event.inputs.githubhandle }}
-          WEBAPP_NAMES="catalog frontend ordering"
+          WEBAPP_CATALOG="${{ github.event.inputs.githubhandle }}-catalog"
+          WEBAPP_ORDERING="${{ github.event.inputs.githubhandle }}-ordering"
+          WEBAPP_FRONTEND="${{ github.event.inputs.githubhandle }}-frontend"
           az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive2023
 
           # Create an App Service Plan
-          az appservice plan create --name $APP_SERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP_NAME --sku S1
+          az appservice plan create --name $APP_SERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP_NAME --sku S1  --tags vslive2023
         
           # Create Web Apps
-          for WEBAPP_NAME in $WEBAPP_NAMES; do
-            az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME
-          done
+          az webapp create --name $WEBAPP_CATALOG --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az webapp create --name $WEBAPP_ORDERING --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
 
 
           
