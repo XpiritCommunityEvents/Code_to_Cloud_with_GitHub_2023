@@ -2,6 +2,8 @@ name: Provision Participant environment
 
 on:
   pull_request:
+    branches: 
+      - main
     paths:
       - profiles/**
     types:
@@ -35,32 +37,28 @@ jobs:
           } else {
             return "${{ github.event.inputs.githubhandle }}";
           }
-
-    - name: Use PR Creator
-      run: |
-        echo "PR Creator: ${{ steps.github_handle.outputs.result }}"
         
-#    - name: Install GH Collab
-#      run: |
-#        gh extension install mislav/gh-repo-collab
-#      env:
-#        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+    - name: Install GH Collab
+      run: |
+        gh extension install mislav/gh-repo-collab
+      env:
+        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
 
- #   - name: Create Repository
- #     env:
- #       GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
- #     run: |
- #       # Create clone of this repo for user
- #       gh repo create XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} \
- #         --public \
- #         --template ${{ github.repository }}
+    - name: Create Repository
+      env:
+        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+      run: |
+        # Create clone of this repo for user
+        gh repo create XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} \
+          --public \
+          --template ${{ github.repository }}
           
-  #  - name: Set Rights to Repo
-  #    env:
-  #      GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
-  #    run: |
-  #      # Add user to newly cloned repo
-  #      gh repo-collab add XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} ${{ steps.github_handle.outputs.result }} --permission admin | cat
+    - name: Set Rights to Repo
+      env:
+        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+      run: |
+        # Add user to newly cloned repo
+        gh repo-collab add XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} ${{ steps.github_handle.outputs.result }} --permission admin | cat
     
     - name: Azure Login
       uses: azure/login@v1
