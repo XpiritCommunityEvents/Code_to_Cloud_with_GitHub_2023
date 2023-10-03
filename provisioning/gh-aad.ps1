@@ -53,7 +53,7 @@ function  CreateAADUser {
         }
         else {
             Write-Host "User [$($displayName)] already exists, skipping creation"
-            return $foundExistingUser
+            return $foundExistingUser[0]
         }
     }
     catch {        
