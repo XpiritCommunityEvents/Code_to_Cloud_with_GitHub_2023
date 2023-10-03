@@ -50,7 +50,7 @@ function  CreateAADUser {
         if ($null -eq $foundExistingUser) {                
             $password = $InitialPassword
             $user = az ad user create --display-name $githubHandle --password $($password) --user-principal-name $($userprincipalname) | ConvertFrom-Json
-            Write-Host "Created AAD User [$($displayname)] with and userprincipalname [$($userprincipalname)]"
+            Write-Host "Created AAD User with userprincipalname [$($userprincipalname)]"
             return $user
         }
         else {
