@@ -43,11 +43,9 @@ function  CreateAADUser {
     )
 
     $userprincipalname = GetADUserPrincipleName -userName $githubHandle
-    $allADUsers = az ad user list | ConvertFrom-Json
+    $foundExistingUser = az ad user list --upn nonexists@xebiacommunityeventsoutlook.onmicrosoft.com | ConvertFrom-Json 
     try {
-        $foundExistingUser = $allADUsers | Where-Object { $_.userPrincipalName -eq $userprincipalname } 
-
-        if ($null -eq $foundExistingUser) {                
+        if ($foundExistingUser.Count -ne 0) {
             $password = $InitialPassword
             $user = az ad user create --display-name $githubHandle --password $($password) --user-principal-name $($userprincipalname) | ConvertFrom-Json
             Write-Host "Created AAD User with userprincipalname [$($userprincipalname)]"
