@@ -14,17 +14,17 @@ jobs:
     uses: ./.github/workflows/create-webapp-artifacts.yml
     with:
         projectfile: 'ordering/ordering.csproj'
-        outputfolder: '${{env.DOTNET_ROOT}}/ordering'
+        outputfolder: '${{github.env.DOTNET_ROOT}}/ordering'
   build-catalog:
     uses: ./.github/workflows/create-webapp-artifacts.yml
     with:
       projectfile: 'catalog/catalog.csproj'
-      outputfolder: '${{env.DOTNET_ROOT}}/catalog'
+      outputfolder: '${{github.env.DOTNET_ROOT}}/catalog'
   build-frontend:
     uses: ./.github/workflows/create-webapp-artifacts.yml
     with:
       projectfile: 'frontend/frontend.csproj'
-      outputfolder: '${{env.DOTNET_ROOT}}/frontend'
+      outputfolder: '${{github.env.DOTNET_ROOT}}/frontend'
   create-release:
     runs-on: ubuntu-latest
     steps:
