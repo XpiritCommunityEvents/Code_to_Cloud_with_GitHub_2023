@@ -1,12 +1,15 @@
 name: Provision Participant environment
 
 on:
+  pull_request:
+    types:
+      - closed
+
   workflow_dispatch:
     inputs: 
       githubhandle: 
         required: true
-        type: text
- 
+        type: text 
   
 jobs:
   build:
@@ -16,6 +19,25 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Get PR creator
+      id: github_handle
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            const pr = context.payload.pull_request;
+            const creator = pr.user.login;
+            console.log(`PR Creator: ${creator}`);
+            return creator;
+          else
+            return ${{ github.event.inputs.githubhandle }}
+          fi
+
+    - name: Use PR Creator
+      run: |
+        echo "PR Creator: ${{ steps.github_handle.outputs.result }}"
+        
 #    - name: Install GH Collab
 #      run: |
 #        gh extension install mislav/gh-repo-collab
@@ -26,8 +48,8 @@ jobs:
  #     env:
  #       GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
  #     run: |
- #       # Get the repository name from the input parameter
- #       gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
+ #       # Create clone of this repo for user
+ #       gh repo create XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} \
  #         --public \
  #         --template ${{ github.repository }}
           
@@ -35,28 +57,27 @@ jobs:
   #    env:
   #      GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
   #    run: |
-  #      # Get the repository name from the input parameter
-  #      gh repo-collab add XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} ${{ github.event.inputs.githubhandle }} --permission admin | cat
+  #      # Add user to newly cloned repo
+  #      gh repo-collab add XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} ${{ steps.github_handle.outputs.result }} --permission admin | cat
     
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-    - name: Azure CLI Action
+    - name: Create Azure resource
       uses: Azure/cli@v1.0.8
       with:
-        # Specify the script here
         inlineScript: |
           # Set variables
-          RESOURCE_GROUP_NAME=rg-${{ github.event.inputs.githubhandle }}
-          APP_SERVICE_PLAN_NAME=plan-${{ github.event.inputs.githubhandle }}
-          WEBAPP_CATALOG="${{ github.event.inputs.githubhandle }}-catalog"
-          WEBAPP_ORDERING="${{ github.event.inputs.githubhandle }}-ordering"
-          WEBAPP_FRONTEND="${{ github.event.inputs.githubhandle }}-frontend"
-          DISPLAYNAME="${{ github.event.inputs.githubhandle }}"
+          RESOURCE_GROUP_NAME=rg-${{ steps.github_handle.outputs.result }}
+          APP_SERVICE_PLAN_NAME=plan-${{ steps.github_handle.outputs.result }}
+          WEBAPP_CATALOG="${{ steps.github_handle.outputs.result }}-catalog"
+          WEBAPP_ORDERING="${{ steps.github_handle.outputs.result }}-ordering"
+          WEBAPP_FRONTEND="${{ steps.github_handle.outputs.result }}-frontend"
+          DISPLAYNAME="${{ steps.github_handle.outputs.result }}"
           INITIALPASSWORD="${{ secrets.INITIALPASSWORD }}"
-          UPN="${{ github.event.inputs.githubhandle }}@xebiacommunityeventsoutlook.onmicrosoft.com"
+          UPN="${{ steps.github_handle.outputs.result }}@xebiacommunityeventsoutlook.onmicrosoft.com"
           
           az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive2023
 
@@ -67,12 +88,8 @@ jobs:
           az webapp create --name $WEBAPP_CATALOG --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
           az webapp create --name $WEBAPP_ORDERING --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
           az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
-          az ad user create --display-name $DISPLAYNAME --password $INITIALPASSWORD --user-principal-name $UPN
 
-    - name: Run Provisioning Script
+    - name: Run User Provisioning Script
       shell: pwsh
       run: |
-        ./provisioning/gh-aad.ps1 -githubHandle ${{ github.event.inputs.githubhandle }}  -AzureCredentialsJson ${{ secrets.AZURE_CREDENTIALS }} -InitialPassword {{ secrets.INITIALPASSWORD }} -runLocal $false  
-
-
-
+        ./provisioning/gh-aad.ps1 -githubHandle ${{ steps.github_handle.outputs.result }}  -AzureCredentialsJson ${{ secrets.AZURE_CREDENTIALS }} -InitialPassword {{ secrets.INITIALPASSWORD }} -runLocal $false  
