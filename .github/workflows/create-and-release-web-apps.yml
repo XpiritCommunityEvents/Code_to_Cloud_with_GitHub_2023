@@ -2,7 +2,7 @@ name: "create-and-release-web-apps"
 permissions:
   actions: write
   packages: write
-  contents: read
+  contents: write
 
 on:
   push:
