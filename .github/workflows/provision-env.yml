@@ -21,7 +21,7 @@ jobs:
 
     - name: Get PR creator
       id: github_handle
-      uses: actions/github-script@v7
+      uses: actions/github-script@v2.1.0
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
