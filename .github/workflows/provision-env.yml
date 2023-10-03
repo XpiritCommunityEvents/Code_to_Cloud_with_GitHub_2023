@@ -31,7 +31,7 @@ jobs:
             console.log(`PR Creator: ${creator}`);
             return creator;
           } else {
-            return ${{ github.event.inputs.githubhandle }}
+            return "${{ github.event.inputs.githubhandle }}";
           }
 
     - name: Use PR Creator
