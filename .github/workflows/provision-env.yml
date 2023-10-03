@@ -48,7 +48,21 @@ jobs:
       with:
         # Specify the script here
         inlineScript: |
-          az group create -l eastus -n rg-${{ github.event.inputs.githubhandle }} --tags vslive2023
+          # Set variables
+          RESOURCE_GROUP_NAME=rg-${{ github.event.inputs.githubhandle }}
+          APP_SERVICE_PLAN_NAME=plan-${{ github.event.inputs.githubhandle }}
+          WEBAPP_NAMES="catalog frontend ordering"
+          az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive2023
+
+          # Create an App Service Plan
+          az appservice plan create --name $APP_SERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP_NAME --sku S1
+        
+          # Create Web Apps
+          for WEBAPP_NAME in $WEBAPP_NAMES; do
+            az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME
+          done
+
+
           
         
 
