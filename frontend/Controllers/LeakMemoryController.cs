@@ -4,7 +4,7 @@ namespace GloboTicket.Frontend.Controllers
 {
     public class LeakMemoryController : Controller
     {
-        static List<byte[]> memoryLeak = new List<byte[]>();
+        static readonly List<byte[]> memoryLeak = new();
         public IActionResult Index()
         {
 
@@ -12,13 +12,12 @@ namespace GloboTicket.Frontend.Controllers
             {
                 while (true)
                 {
-                    byte[] buffer = new byte[1024 * 1024 * 25];//alocate 25M
+                    byte[] buffer = new byte[1024 * 1024 * 25]; // allocate 25M
                     memoryLeak.Add(buffer);
                     Thread.Sleep(1000);
-
                 }
             });
-            return View();
+            return Accepted();
         }
     }
 }
