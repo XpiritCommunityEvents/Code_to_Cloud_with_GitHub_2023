@@ -71,23 +71,20 @@ jobs:
         inlineScript: |
           # Set variables
           RESOURCE_GROUP_NAME=rg-${{ steps.github_handle.outputs.result }}
-          APP_SERVICE_PLAN_NAME=plan-${{ steps.github_handle.outputs.result }}
-          WEBAPP_CATALOG="${{ steps.github_handle.outputs.result }}-catalog"
-          WEBAPP_ORDERING="${{ steps.github_handle.outputs.result }}-ordering"
-          WEBAPP_FRONTEND="${{ steps.github_handle.outputs.result }}-frontend"
-          DISPLAYNAME="${{ steps.github_handle.outputs.result }}"
-          INITIALPASSWORD="${{ secrets.INITIALPASSWORD }}"
-          UPN="${{ steps.github_handle.outputs.result }}@xebiacommunityeventsoutlook.onmicrosoft.com"
+          APP_SERVICE_PLAN_NAME=asp-${{ steps.github_handle.outputs.result }}
+          WEBAPP_CATALOG="app-${{ steps.github_handle.outputs.result }}-catalog"
+          WEBAPP_ORDERING="app-${{ steps.github_handle.outputs.result }}-ordering"
+          WEBAPP_FRONTEND="app-${{ steps.github_handle.outputs.result }}-frontend"
           
-          az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive2023
+          az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive=2023
 
           # Create an App Service Plan
-          az appservice plan create --name $APP_SERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP_NAME --sku S1  --tags vslive2023
+          az appservice plan create --name $APP_SERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP_NAME --sku S1 --tags vslive=2023
         
           # Create Web Apps
-          az webapp create --name $WEBAPP_CATALOG --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
-          az webapp create --name $WEBAPP_ORDERING --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
-          az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az webapp create --name $WEBAPP_CATALOG --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME --tags vslive=2023
+          az webapp create --name $WEBAPP_ORDERING --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME --tags vslive=2023
+          az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME --tags vslive=2023
 
     - name: Run User Provisioning Script
       shell: pwsh
