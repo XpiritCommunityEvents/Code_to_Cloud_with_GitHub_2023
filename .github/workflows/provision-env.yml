@@ -16,27 +16,27 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install GH Collab
-      run: |
-        gh extension install mislav/gh-repo-collab
-      env:
-        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+#    - name: Install GH Collab
+#      run: |
+#        gh extension install mislav/gh-repo-collab
+#      env:
+#        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
 
-    - name: Create Repository
-      env:
-        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
-      run: |
-        # Get the repository name from the input parameter
-        gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
-          --public \
-          --template ${{ github.repository }}
+ #   - name: Create Repository
+ #     env:
+ #       GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+ #     run: |
+ #       # Get the repository name from the input parameter
+ #       gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
+ #         --public \
+ #         --template ${{ github.repository }}
           
-    - name: Set Rights to Repo
-      env:
-        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
-      run: |
-        # Get the repository name from the input parameter
-        gh repo-collab add XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} ${{ github.event.inputs.githubhandle }} --permission admin | cat
+  #  - name: Set Rights to Repo
+  #    env:
+  #      GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+  #    run: |
+  #      # Get the repository name from the input parameter
+  #      gh repo-collab add XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} ${{ github.event.inputs.githubhandle }} --permission admin | cat
     
     - name: Azure Login
       uses: azure/login@v1
