@@ -16,6 +16,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Install GH Collab
+      run: |
+        gh extension install mislav/gh-repo-collab
+
     - name: Create Repository
       env:
         GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
@@ -24,3 +28,10 @@ jobs:
         gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
           --public \
           --template ${{ github.repository }}
+          
+    - name: Set Rights to Repo
+      env:
+        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+      run: |
+        # Get the repository name from the input parameter
+        gh repo-collab add XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} ${{ github.event.inputs.githubhandle }} --permission admin 
