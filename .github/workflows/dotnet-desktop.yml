@@ -1,0 +1,26 @@
+name: Provision Participant environment
+
+on:
+  workflow_dispatch:
+    inputs: 
+      githubhandle: 
+        required: true
+        type: text
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Create Repository
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Get the repository name from the input parameter
+        REPO_NAME="${{ github.event.inputs.githubhandle }}"
+        gh repo create $REPO_NAME \
+          --confirm \
+          --template XpiritCommunityEvents/Code_to_Cloud_with_GitHub_2023
