@@ -49,9 +49,15 @@ jobs:
         GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
       run: |
         # Create clone of this repo for user
-        gh repo create XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} \
-          --public \
-          --template ${{ github.repository }}
+        REPO_NAME = "XpiritCommunityEvents/${{ steps.github_handle.outputs.result }}"
+        if gh repo view $REPO_NAME &>/dev/null; then
+            echo "Repository $REPO_NAME already exists."
+        else
+          echo "Repository $REPO_NAME does not exist."
+          gh repo create $REPO_NAME \
+            --public \
+            --template ${{ github.repository }}
+        fi
           
     - name: Set Rights to Repo
       env:
