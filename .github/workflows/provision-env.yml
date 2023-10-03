@@ -54,6 +54,10 @@ jobs:
           WEBAPP_CATALOG="${{ github.event.inputs.githubhandle }}-catalog"
           WEBAPP_ORDERING="${{ github.event.inputs.githubhandle }}-ordering"
           WEBAPP_FRONTEND="${{ github.event.inputs.githubhandle }}-frontend"
+          DISPLAYNAME="${{ github.event.inputs.githubhandle }}"
+          INITIALPASSWORD="${{ secrets.INITIALPASSWORD }}"
+          UPN="${{ github.event.inputs.githubhandle }}@xebiacommunityeventsoutlook.onmicrosoft.com"
+          
           az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive2023
 
           # Create an App Service Plan
@@ -63,8 +67,7 @@ jobs:
           az webapp create --name $WEBAPP_CATALOG --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
           az webapp create --name $WEBAPP_ORDERING --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
           az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az ad user create --display-name $DISPLAYNAME --password $INITIALPASSWORD --user-principal-name $UPN
 
 
-          
-        
 
