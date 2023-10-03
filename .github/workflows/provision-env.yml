@@ -37,3 +37,18 @@ jobs:
       run: |
         # Get the repository name from the input parameter
         gh repo-collab add XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} ${{ github.event.inputs.githubhandle }} --permission admin | cat
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Azure CLI Action
+      uses: Azure/cli@v1.0.8
+      with:
+        # Specify the script here
+        inlineScript: |
+          az group create -l eastus -n rg-${{ github.event.inputs.githubhandle }} --tags vslive2023
+          
+        
+
