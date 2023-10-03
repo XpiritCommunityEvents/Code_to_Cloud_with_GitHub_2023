@@ -7,6 +7,9 @@ on:
         required: true
         type: text
 
+permissions: 
+  
+  
 jobs:
   build:
     runs-on: ubuntu-latest  
@@ -17,7 +20,7 @@ jobs:
 
     - name: Create Repository
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
         # Get the repository name from the input parameter
         gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
