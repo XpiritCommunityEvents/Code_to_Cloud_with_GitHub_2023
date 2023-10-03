@@ -70,12 +70,14 @@ function AddADUserToResourceGroup {
         [string] $role
     )
 
+    $rg = az group show --resource-group $ResourceGroup | ConvertFrom-Json
+
     # Get existing assignments
-    $existingAssignment = az role assignment list --assignee $AADUserId --resource-group $ResourceGroup --role $role | ConvertFrom-Json
+    $existingAssignment = az role assignment list --assignee $AADUserId --scope $rg.id --role $role | ConvertFrom-Json
 
     if ($null -eq $existingAssignment) {
         try {
-            az role assignment create --role $role --assignee-object-id $AADUserId --resource-group $ResourceGroup
+            az role assignment create --role $role --assignee-object-id $AADUserId --scope $rg.id
         }
         catch {        
             $ErrorMessage = $_.Exception.Message
