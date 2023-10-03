@@ -81,11 +81,11 @@ function AddADUserToResourceGroup {
         }
         catch {        
             $ErrorMessage = $_.Exception.Message
-            Write-Host "Error adding the AAD Group [$($AADUserGroupName)] to the resourcegroup [$($GroupName)]: $ErrorMessage"
+            Write-Host "Error adding the AAD user to the resourcegroup [$($GroupName)]: $ErrorMessage"
         }
     }
     else {
-        Write-Host "AADGroup [$($AADUserGroupName)] already has rights in the resourcegroup"
+        Write-Host "AAD user already has rights in the resourcegroup"
     }
 }
 
