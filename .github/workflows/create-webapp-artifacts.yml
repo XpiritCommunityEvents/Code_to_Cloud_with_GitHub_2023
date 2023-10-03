@@ -1,7 +1,7 @@
 name: "create-webapp-artifacts"
 permissions:
   actions: write
-  contents: write
+  contents: read
 on:
   workflow_call:
     inputs:
