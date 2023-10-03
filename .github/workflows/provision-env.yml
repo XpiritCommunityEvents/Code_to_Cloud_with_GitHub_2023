@@ -1,0 +1,73 @@
+name: Provision Participant environment
+
+on:
+  workflow_dispatch:
+    inputs: 
+      githubhandle: 
+        required: true
+        type: text
+ 
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest  
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+#    - name: Install GH Collab
+#      run: |
+#        gh extension install mislav/gh-repo-collab
+#      env:
+#        GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+
+ #   - name: Create Repository
+ #     env:
+ #       GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+ #     run: |
+ #       # Get the repository name from the input parameter
+ #       gh repo create XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} \
+ #         --public \
+ #         --template ${{ github.repository }}
+          
+  #  - name: Set Rights to Repo
+  #    env:
+  #      GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
+  #    run: |
+  #      # Get the repository name from the input parameter
+  #      gh repo-collab add XpiritCommunityEvents/${{ github.event.inputs.githubhandle }} ${{ github.event.inputs.githubhandle }} --permission admin | cat
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Azure CLI Action
+      uses: Azure/cli@v1.0.8
+      with:
+        # Specify the script here
+        inlineScript: |
+          # Set variables
+          RESOURCE_GROUP_NAME=rg-${{ github.event.inputs.githubhandle }}
+          APP_SERVICE_PLAN_NAME=plan-${{ github.event.inputs.githubhandle }}
+          WEBAPP_CATALOG="${{ github.event.inputs.githubhandle }}-catalog"
+          WEBAPP_ORDERING="${{ github.event.inputs.githubhandle }}-ordering"
+          WEBAPP_FRONTEND="${{ github.event.inputs.githubhandle }}-frontend"
+          DISPLAYNAME="${{ github.event.inputs.githubhandle }}"
+          INITIALPASSWORD="${{ secrets.INITIALPASSWORD }}"
+          UPN="${{ github.event.inputs.githubhandle }}@xebiacommunityeventsoutlook.onmicrosoft.com"
+          
+          az group create -l eastus -n $RESOURCE_GROUP_NAME --tags vslive2023
+
+          # Create an App Service Plan
+          az appservice plan create --name $APP_SERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP_NAME --sku S1  --tags vslive2023
+        
+          # Create Web Apps
+          az webapp create --name $WEBAPP_CATALOG --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az webapp create --name $WEBAPP_ORDERING --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
+          az ad user create --display-name $DISPLAYNAME --password $INITIALPASSWORD --user-principal-name $UPN
+
+
+
