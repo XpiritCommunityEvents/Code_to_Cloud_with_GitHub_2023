@@ -1,7 +1,8 @@
 name: "create-webapp-artifacts"
 permissions:
   actions: write
-  contents: read
+  contents: write
+  runners: write
 on:
   workflow_call:
     inputs:
@@ -48,8 +49,8 @@ jobs:
         run: dotnet build ${{inputs.projectfile}} --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ${{inputs.projectfile}} -c Release -o ${{inputs.outputfolder}}
-
+        run: dotnet publish ${{inputs.projectfile}} -c Release -property:PublishDir=${{GitHub.env.DOTNET_ROOT}}/${{inputs.outputfolder}}
+       
 
      
 
