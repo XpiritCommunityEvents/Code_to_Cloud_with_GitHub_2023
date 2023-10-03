@@ -69,5 +69,10 @@ jobs:
           az webapp create --name $WEBAPP_FRONTEND --resource-group $RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN_NAME  --tags vslive2023
           az ad user create --display-name $DISPLAYNAME --password $INITIALPASSWORD --user-principal-name $UPN
 
+    - name: Run Provisioning Script
+      shell: pwsh
+      run: |
+        ./provisioning/gh-aad.ps1 -githubHandle ${{ github.event.inputs.githubhandle }}  -AzureCredentialsJson ${{ secrets.AZURE_CREDENTIALS }} -InitialPassword {{ secrets.INITIALPASSWORD }} -runLocal $false  
+
 
 
