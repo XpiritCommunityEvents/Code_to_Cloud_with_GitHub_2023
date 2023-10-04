@@ -5,5 +5,8 @@ node_modules/
 *.user
 *.tmp
 .vs/
+provisioning/Run-local.ps1
+provisioning/creds.txt
 .idea/
 .DS_Store
+
