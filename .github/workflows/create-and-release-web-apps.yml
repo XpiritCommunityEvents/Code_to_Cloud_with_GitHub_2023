@@ -42,13 +42,13 @@ jobs:
           run: dotnet build catalog/catalog.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish catalog/catalog.csproj -c Release -property:PublishDir=${{GitHub.env.RUNNER_TEMP}}/catalog
+          run: dotnet publish catalog/catalog.csproj -c Release -property:PublishDir=${{GitHub.RUNNER_TEMP}}/catalog
     
         - name: Build with dotnet
           run: dotnet build ordering/ordering.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish ordering/ordering.csproj -c Release -property:PublishDir=${{GitHub.env.RUNNER_TEMP}}/ordering
+          run: dotnet publish ordering/ordering.csproj -c Release -property:PublishDir=${{GitHub.RUNNER_TEMP}}/ordering
         
 
 
@@ -59,7 +59,7 @@ jobs:
             tag_name: "v${{github.env.GitVersion_SemVer}}"
             generate_release_notes: true
             files: |
-                ${{Github.env.RUNNER_TEMP}}/ordering/*
-                ${{Github.env.RUNNER_TEMP}}/catalog/*
-                ${{Github.env.RUNNER_TEMP}}/frontend/*
+                ${{Github.RUNNER_TEMP}}/ordering/*
+                ${{Github.RUNNER_TEMP}}/catalog/*
+                ${{Github.RUNNER_TEMP}}/frontend/*
 
