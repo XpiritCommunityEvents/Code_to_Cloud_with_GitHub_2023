@@ -36,20 +36,19 @@ jobs:
           run: dotnet build frontend/frontend.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish frontend/frontend.csproj -c Release -property:PublishDir=${{GitHub.env.RUNNER_TEMP}}/frontend
+          run: dotnet publish frontend/frontend.csproj -c Release
         
         - name: Build with dotnet
           run: dotnet build catalog/catalog.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish catalog/catalog.csproj -c Release -property:PublishDir=${{GitHub.RUNNER_TEMP}}/catalog
-    
+          run: dotnet publish catalog/catalog.csproj -c Release 
+
         - name: Build with dotnet
           run: dotnet build ordering/ordering.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish ordering/ordering.csproj -c Release -property:PublishDir=${{GitHub.RUNNER_TEMP}}/ordering
-        
+          run: dotnet publish ordering/ordering.csproj -c Release 
 
 
         - name: create a relase with version provided by package push
@@ -59,7 +58,7 @@ jobs:
             tag_name: "v${{github.env.GitVersion_SemVer}}"
             generate_release_notes: true
             files: |
-                ${{Github.RUNNER_TEMP}}/ordering/*
-                ${{Github.RUNNER_TEMP}}/catalog/*
-                ${{Github.RUNNER_TEMP}}/frontend/*
-
+                ordering/bin/Release/net6.0/publish/*
+                catalog/bin/Release/net6.0/publish/*
+                frontend/bin/Release/net6.0/publish/*
+                
