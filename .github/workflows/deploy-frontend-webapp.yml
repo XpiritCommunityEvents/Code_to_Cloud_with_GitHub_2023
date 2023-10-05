@@ -2,7 +2,7 @@ name: Deployment globoticket Frontend
 env:
   HomePage: ''
   appname: 'globoticket'
-  resourcegroup: actionsinaction
+  resourcegroup: globoticket
   slotname: 'staging'
 on:
   release: 
@@ -22,8 +22,12 @@ jobs:
           version: ${{ github.event.release.id }}
           regex: true
           file: ".*"
-          target: './frontend'
+          target: './release'
 
+      - name: Zip artifact for deployment
+        run: |
+          unzip ./release/frontend.zip ./frontend -r
+        
       - name: Azure Login
         uses: azure/login@v1
         with:
@@ -41,7 +45,7 @@ jobs:
         with:
           app-name: '${{env.appname}}'
           slot-name: '${{env.slotname}}'
-          package: .
+          package: ./frontend
       - name: Set homepage location for next job
         run: |
           echo "homepage=${{ steps.deploy-to-webapp.outputs.webapp-url }}" >> $GITHUB_OUTPUT
