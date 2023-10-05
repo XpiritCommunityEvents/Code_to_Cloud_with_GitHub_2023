@@ -37,12 +37,16 @@ jobs:
     
         - name: dotnet publish
           run: dotnet publish frontend/frontend.csproj -c Release
-        
+       
+
+
         - name: Build with dotnet
           run: dotnet build catalog/catalog.csproj --configuration Release
-    
+
+   
         - name: dotnet publish
           run: dotnet publish catalog/catalog.csproj -c Release 
+
 
         - name: Build with dotnet
           run: dotnet build ordering/ordering.csproj --configuration Release
@@ -50,6 +54,11 @@ jobs:
         - name: dotnet publish
           run: dotnet publish ordering/ordering.csproj -c Release 
 
+        - name: Zip artifact for deployment
+          run: |
+            zip ordering.zip ordering/bin/Release/net6.0/publish/* -r
+            zip catalog.zip catalog/bin/Release/net6.0/publish/* -r
+            zip frontend.zip frontend/bin/Release/net6.0/publish/* -r
 
         - name: create a relase with version provided by package push
           uses: softprops/action-gh-release@v1
@@ -58,7 +67,7 @@ jobs:
             tag_name: "v${{env.GitVersion_SemVer}}"
             generate_release_notes: true
             files: |
-                ordering/bin/Release/net6.0/publish/*
-                catalog/bin/Release/net6.0/publish/*
-                frontend/bin/Release/net6.0/publish/*
+              ordering.zip
+              catalog.zip
+              frontend.zip
                 
