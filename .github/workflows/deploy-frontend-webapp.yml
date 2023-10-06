@@ -26,7 +26,7 @@ jobs:
 
       - name: UnZip artifact for deployment
         run: |
-          unzip ./frontend.zip ./frontend -r
+          unzip ./frontend.zip -d ./frontend
         
       - name: Azure Login
         uses: azure/login@v1
