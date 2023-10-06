@@ -22,11 +22,11 @@ jobs:
           version: ${{ github.event.release.id }}
           regex: true
           file: ".*"
-          target: './release'
+          target: './'
 
-      - name: Zip artifact for deployment
+      - name: UnZip artifact for deployment
         run: |
-          unzip ./release/frontend.zip ./frontend -r
+          unzip ./frontend.zip ./frontend -r
         
       - name: Azure Login
         uses: azure/login@v1
