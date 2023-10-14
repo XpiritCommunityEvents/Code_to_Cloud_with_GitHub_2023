@@ -53,17 +53,20 @@ jobs:
         - name: Zip artifact for deployment
           run: |
             mkdir frontend-dist
-            mv frontend/bin/Release/net6.0/publish/* ./frontend-dist
+            cp ${{env.DOTNET_ROOT}}/frontend/* ./frontend-dist -r
             cd frontend-dist
             zip frontend.zip ./* -r
+            cd ..
             mkdir ordering-dist
-            mv ordering/bin/Release/net6.0/publish/* ./ordering-dist
+            cp ${{env.DOTNET_ROOT}}/ordering/* ./ordering-dist -r
             cd ordering-dist
             zip ordering.zip ./* -r
+            cd ..
             mkdir catalog-dist
-            mv catalog/bin/Release/net6.0/publish/* ./catalog-dist
+            cp ${{env.DOTNET_ROOT}}/catalog/* ./catalog-dist -r
             cd catalog-dist
             zip catalog.zip ./* -r
+            cd ..
             
 
         - name: create a relase with version provided by package push
