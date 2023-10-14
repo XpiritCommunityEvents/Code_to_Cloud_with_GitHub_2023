@@ -1,8 +1,8 @@
 name: "create-and-release-web-apps"
-permissions:
-  actions: write
-  packages: write
-  contents: write
+# permissions:
+#   actions: write
+#   packages: write
+#   contents: write
 
 on:
   push:
