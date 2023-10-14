@@ -1,0 +1,52 @@
+name: Deployment globoticket Frontend
+env:
+  HomePage: ''
+  appname: globoticket-ordering
+  resourcegroup: globoticket
+  slotname: staging
+on:
+  release: 
+     types: [published] 
+     
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: 'staging'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: get release artifacts for deployment, picks data from latest release
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: ${{ github.event.release.id }}
+          regex: true
+          file: ".*"
+          target: './'
+
+      - name: UnZip artifact for deployment
+        run: |
+          unzip ./ordering.zip -d ./ordering
+        
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+      - name: Create Deployment Slot Staging
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            az webapp deployment slot create --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}}
+          
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: '${{env.appname}}'
+          slot-name: '${{env.slotname}}'
+          package: ./ordering
+      - name: Set homepage location for next job
+        run: |
+          echo "homepage=${{ steps.deploy-to-webapp.outputs.webapp-url }}" >> $GITHUB_OUTPUT
+          
