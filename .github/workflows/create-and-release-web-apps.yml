@@ -36,30 +36,53 @@ jobs:
           run: dotnet build frontend/frontend.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish frontend/frontend.csproj -c Release
+          run: dotnet publish frontend/frontend.csproj -c Release -o ${{env.DOTNET_ROOT}}/frontend
        
-
+        - name: Upload artifact for deployment job
+          uses: actions/upload-artifact@v3
+          with:
+            name: frontend
+            path: ${{env.DOTNET_ROOT}}/frontend
 
         - name: Build with dotnet
           run: dotnet build catalog/catalog.csproj --configuration Release
 
    
         - name: dotnet publish
-          run: dotnet publish catalog/catalog.csproj -c Release 
+          run: dotnet publish catalog/catalog.csproj -c Release  -o ${{env.DOTNET_ROOT}}/catalog
 
+        - name: Upload artifact for deployment job
+          uses: actions/upload-artifact@v3
+          with:
+            name: catalog
+            path: ${{env.DOTNET_ROOT}}/catalog
 
         - name: Build with dotnet
           run: dotnet build ordering/ordering.csproj --configuration Release
     
         - name: dotnet publish
-          run: dotnet publish ordering/ordering.csproj -c Release 
+          run: dotnet publish ordering/ordering.csproj -c Release  -o ${{env.DOTNET_ROOT}}/ordering
 
-        - name: Zip artifact for deployment
-          run: |
-            zip ordering.zip ordering/bin/Release/net6.0/publish/* -r
-            zip catalog.zip catalog/bin/Release/net6.0/publish/* -r
-            zip frontend.zip frontend/bin/Release/net6.0/publish/* -r
+        - name: Upload artifact for deployment job
+          uses: actions/upload-artifact@v3
+          with:
+            name: ordering
+            path: ${{env.DOTNET_ROOT}}/ordering
 
+        - name: Download artifact from build job
+          uses: actions/download-artifact@v3
+          with:
+            name: frontend
+        
+        - name: Download artifact from build job
+          uses: actions/download-artifact@v3
+          with:
+            name: catalog
+        - name: Download artifact from build job
+          uses: actions/download-artifact@v3
+          with:
+            name: ordering
+       
         - name: create a relase with version provided by package push
           uses: softprops/action-gh-release@v1
           with:
