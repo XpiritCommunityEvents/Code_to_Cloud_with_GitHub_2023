@@ -37,8 +37,8 @@ jobs:
         uses: Azure/cli@v1.0.7
         with:
           inlineScript: |
-            'az account set --subscription e57087a4-a053-48c9-8857-995316398cdc'
-            'az webapp deployment slot create --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}}'
+            az account set --subscription e57087a4-a053-48c9-8857-995316398cdc
+            az webapp deployment slot create --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}}
           
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
