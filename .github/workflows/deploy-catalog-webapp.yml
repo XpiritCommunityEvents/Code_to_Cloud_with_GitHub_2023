@@ -23,10 +23,6 @@ jobs:
           regex: true
           file: ".*"
           target: './'
-
-      - name: UnZip artifact for deployment
-        run: |
-          unzip ./catalog.zip -d ./catalog
         
       - name: Azure Login
         uses: azure/login@v1
@@ -45,7 +41,68 @@ jobs:
         with:
           app-name: '${{env.appname}}'
           slot-name: '${{env.slotname}}'
-          package: ./catalog
+          package: ./catalog.zip
       - name: Set homepage location for next job
         run: |
           echo "homepage=${{ steps.deploy-to-webapp.outputs.webapp-url }}" >> $GITHUB_OUTPUT
+  validate:
+    runs-on: ubuntu-latest
+    needs: deploy
+    environment:
+      name: 'staging'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
+      - name: ensure deployment is healthy before we test
+        run: |
+            start_time=$(date +%s)
+            max_duration=300
+            api_endpoint="${{ needs.deploy.outputs.homepage }}/event"
+            while true; do
+                current_time=$(date +%s)
+                elapsed_time=$((current_time - start_time))
+                # If the elapsed time exceeds the maximum duration, exit with an error
+                if [ "$elapsed_time" -ge "$max_duration" ]; then
+                    echo "No valid response received within the time limit."
+                    exit 1
+                fi
+                # Send an API request and validate the JSON response
+                response=$(curl -s "$api_endpoint" | jq empty 2>/dev/null)
+                # Check the exit code of jq
+                if [ $? -eq 0 ]; then
+                    echo "Valid JSON received."
+                    # Add your processing logic here for the valid response
+                    break  # Exit the loop when valid JSON is received
+                else
+                    echo "Invalid JSON received. Retrying..."
+                fi
+                # Sleep for a few seconds before making the next request
+                sleep 5
+            done
+        env: 
+          homepage: ${{ needs.deploy.outputs.homepage }}
+  VipSwap:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: vip swap
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: 'az webapp deployment slot swap --slot ${{env.slotname}}  --name ${{env.appname}} --resource-group ${{env.resourcegroup}}'
+
+      - name: clear Routing rules (100% to production)
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: 'az webapp traffic-routing clear --name ${{env.appname}} --resource-group ${{env.resourcegroup}}'
+
+      - name: clear staging slot
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: 'az webapp deployment slot delete --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}}'
+        
+        
