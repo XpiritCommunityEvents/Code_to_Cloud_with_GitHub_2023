@@ -1,6 +1,9 @@
+using GloboTicket.Catalog.Infrastructure;
 using GloboTicket.Catalog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Database.LoadSampleData();
 
 // Add services to the container.
 builder.Services.AddHttpClient();

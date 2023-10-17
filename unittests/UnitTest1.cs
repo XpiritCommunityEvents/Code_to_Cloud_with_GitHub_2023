@@ -4,7 +4,7 @@ namespace unittests
     public class Fast_Unit_Tests
     {
         [TestMethod("validate numbers are > 0")]
-        public void numbers_are_greater_then_0()
+        public void numbers_are_greater_than_0()
         {
             Assert.IsTrue(true);
         }

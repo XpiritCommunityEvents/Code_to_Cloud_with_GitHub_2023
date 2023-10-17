@@ -11,7 +11,8 @@
             <h1>@Model.Name</h1>
         </div>
         <div class="row mt-2">
-            <h3>@Model.Artist</h3>
+            <h3>@Model.Artist.Name</h3>
+            <p>@Model.Artist.Genre</p>
         </div>
         <div class="row mt-3 mt-4 bold">
             <h3>@Model.Date.ToShortDateString()</h3>
