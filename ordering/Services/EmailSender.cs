@@ -14,6 +14,6 @@ public class EmailSender
     public void SendEmailForOrder(OrderForCreation order)
     {
         logger.LogInformation($"Received a new order for {order.CustomerDetails.Email}");
-        logger.LogWarning("Not using Dapr yet, so no email sent");
+        logger.LogWarning("Not wired up to a real email sending service!");
     }
 }
