@@ -37,4 +37,16 @@ public class EventRepository : IEventRepository
         // 20 percent off
         specialOfferEvent.Price = (int)(specialOfferEvent.Price * 0.8);
     }
+
+    public Task<Artist> AddArtist(string name, string genre)
+    {
+        var artist = new Artist(Guid.NewGuid(), name, genre);
+        Database.Artists.Add(artist);
+        return Task.FromResult(artist);
+    }
+
+    public Task<IEnumerable<Artist>> GetArtists()
+    {
+        return Task.FromResult((IEnumerable<Artist>)Database.Artists);
+    }
 }
