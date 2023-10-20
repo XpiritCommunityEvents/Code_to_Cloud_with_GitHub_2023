@@ -23,5 +23,12 @@ namespace unittests
         {
             Assert.IsTrue(true);
         }
+
+        [TestMethod]
+        public void Dummy_test()
+        {
+            var c = new GloboTicket.Catalog.Artist(Guid.NewGuid(), "Rolling Stones", "Rock'n'Roll");
+            Assert.AreEqual(c.Name, "Rolling Stones");
+        }
     }
 }

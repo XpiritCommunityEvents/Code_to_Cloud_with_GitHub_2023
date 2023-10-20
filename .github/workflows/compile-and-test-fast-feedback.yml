@@ -30,10 +30,10 @@ jobs:
       run: dotnet build --no-restore
 
     - name: add markdown report logger for frontend project
-      run: dotnet add unittests/unittests.csproj  package LiquidTestReports.Markdown
+      run: dotnet add unittests/unittests.csproj package LiquidTestReports.Markdown
       
     - name: Test
-      run: dotnet test --logger "liquid.md;logfilename=testResults.md" 
+      run: dotnet test --logger "liquid.md;logfilename=testResults.md" unittests/unittests.csproj
     - name: Output the results to the actions jobsummary
       if: always()
       run: cat $(find . -name testResults.md) >> $GITHUB_STEP_SUMMARY
