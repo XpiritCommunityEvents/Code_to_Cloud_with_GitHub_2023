@@ -15,26 +15,18 @@ internal static class Database
         Events.Clear();
         Artists.Clear();
         
-        var johnEgbertGuid = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA320}");
-        var johnEgbertEventGuid = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA317}");
 
-        var nickSailorGuid = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA321}");
-        var nickSailorEventGuid = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA318}");
-
-        var michaelJohnsonGuid = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA322}");
-        var michaelJohnsonEventGuid = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA319}");
-
-        var johnEgbert = new Artist(johnEgbertGuid, "John Egbert", "Banjo virtuoso");
-        var michaelJohnson = new Artist(michaelJohnsonGuid, "Michael Johnson", "Stand up comedian");
-        var nickSailor = new Artist(nickSailorGuid, "Nick Sailor", "Playwright");
+        var johnEgbert = new Artist(Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA320}"), "John Egbert", "Banjo virtuoso");
+        var michaelJohnson = new Artist(Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA322}"), "Michael Johnson", "Stand up comedian");
+        var nickSailor = new Artist(Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA321}"), "Nick Sailor", "Playwright");
 
         Artists.Add(johnEgbert);
         Artists.Add(michaelJohnson);
         Artists.Add(nickSailor);
-        
+
         Events.Add(new Event
         {
-            EventId = johnEgbertEventGuid,
+            EventId = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA317}"),
             Name = "John Egbert Live",
             Price = 65,
             Artist = johnEgbert,
@@ -45,7 +37,7 @@ internal static class Database
 
         Events.Add(new Event
         {
-            EventId = michaelJohnsonEventGuid,
+            EventId = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA319}"),
             Name = "The State of Affairs: Michael Live!",
             Price = 85,
             Artist = michaelJohnson,
@@ -56,7 +48,7 @@ internal static class Database
 
         Events.Add(new Event
         {
-            EventId = nickSailorEventGuid,
+            EventId = Guid.Parse("{CFB88E29-4744-48C0-94FA-B25B92DEA318}"),
             Name = "To the Moon and Back",
             Price = 135,
             Artist = nickSailor,

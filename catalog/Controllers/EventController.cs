@@ -33,8 +33,9 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetById")]
-    public async Task<Event> GetById(Guid id)
-    {
-        return await _eventRepository.GetEventById(id);
+    public async Task<IActionResult> GetById(Guid id)
+    {        
+        var evt = await _eventRepository.GetEventById(id);
+        return Ok(evt);
     }
 }
