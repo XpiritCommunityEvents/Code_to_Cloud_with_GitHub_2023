@@ -1,11 +1,7 @@
 name: Provision Participant environment
 
 on:
-  pull_request:
-    branches: 
-      - main
-    paths:
-      - profiles/**
+  issues:
     types:
       - closed
 
@@ -23,20 +19,22 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Get PR creator
+    - name: Get issue creator
       id: github_handle
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          if ("${{ github.event_name }}" == "pull_request") {
-            const pr = context.payload.pull_request;
-            const creator = pr.user.login;
-            console.log(`PR Creator: ${creator}`);
-            return creator;
-          } else {
-            return "${{ github.event.inputs.githubhandle }}";
+          if ("${{ github.event_name }}" == "issues") {
+            const subject = context.payload.issue;
+            if (subject.labels.find(l => l.name == "signup")) {
+              creator = subject.user.login;
+              console.log(`Issue creator: ${creator}`);
+              return creator;
+            }
+            throw new Error("Issue did not have a signup label");
           }
+          return "${{ github.event.inputs.githubhandle }}";
         
     - name: Install GH Collab
       run: |
