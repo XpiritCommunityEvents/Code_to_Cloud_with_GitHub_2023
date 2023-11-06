@@ -1,7 +1,7 @@
 ---
 name: 'Signup '
 about: Issue template that can be used to signup for an own repository
-title: ":pencil2: [SignUp]"
+title: "[SignUp]"
 labels: signup
 assignees: roycornelissen, vriesmarcel, renevanosnabrugge
 
