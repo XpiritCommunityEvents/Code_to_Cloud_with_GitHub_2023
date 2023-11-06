@@ -47,7 +47,7 @@ jobs:
         GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
       run: |
         # Create clone of this repo for user
-        repo_name="XpiritCommunityEvents/${{ steps.github_handle.outputs.result }}"
+        repo_name="XpiritCommunityEvents/attendeec2c-${{ steps.github_handle.outputs.result }}"
         if gh repo view $repo_name &>/dev/null; then
             echo "Repository $repo_name already exists."
         else
@@ -62,7 +62,7 @@ jobs:
         GH_TOKEN: ${{ secrets.VSLIVE_REPOCREATE }}
       run: |
         # Add user to newly cloned repo
-        gh repo-collab add XpiritCommunityEvents/${{ steps.github_handle.outputs.result }} ${{ steps.github_handle.outputs.result }} --permission admin | cat
+        gh repo-collab add XpiritCommunityEvents/attendeec2c-${{ steps.github_handle.outputs.result }} ${{ steps.github_handle.outputs.result }} --permission admin | cat
     
     - name: Azure Login
       uses: azure/login@v1
