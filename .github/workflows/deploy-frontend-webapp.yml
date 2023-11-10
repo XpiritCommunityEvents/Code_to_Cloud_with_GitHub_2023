@@ -86,10 +86,40 @@ jobs:
         run: dotnet test Tests.Playwright/Tests.Playwright.csproj
         env: 
           homepage: ${{ needs.deploy.outputs.homepage }}
-
-  VipSwap:
+  staging10:
     runs-on: ubuntu-latest
     needs: validate
+    environment:
+      name: 'staging30'
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: TenPercent
+      uses: Azure/cli@v1.0.7
+      with:
+        inlineScript: |
+          az webapp traffic-routing set --distribution ${{env.slotname}}=10  --name ${{env.appname}} --resource-group ${{env.resourcegroup}}
+  staging30:
+    runs-on: ubuntu-latest
+    needs: staging10
+    environment:
+      name: 'staging30'
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: TenPercent
+      uses: Azure/cli@v1.0.7
+      with:
+        inlineScript: |
+          az webapp traffic-routing set --distribution ${{env.slotname}}=30  --name ${{env.appname}} --resource-group ${{env.resourcegroup}}
+          
+  VipSwap:
+    runs-on: ubuntu-latest
+    needs: staging30
     steps:
       - name: Azure Login
         uses: azure/login@v1
