@@ -93,4 +93,4 @@ jobs:
     - name: Run User Provisioning Script
       shell: pwsh
       run: |
-        ./provisioning/gh-aad.ps1 -githubHandle ${{ steps.github_handle.outputs.result }} -AzureCredentialsJson '${{ secrets.AZURE_CREDENTIALS }}' -InitialPassword '{{ secrets.INITIALPASSWORD }}' -runLocal $false
+        ./provisioning/gh-aad.ps1 -githubHandle ${{ steps.github_handle.outputs.result }} -AzureCredentialsJson '${{ secrets.AZURE_CREDENTIALS }}' -InitialPassword {{ secrets.INITIALPASSWORD }} -runLocal $false
