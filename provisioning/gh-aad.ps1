@@ -91,7 +91,7 @@ function AddADUserToResourceGroup {
 
 
 if ($runLocal -eq $false) {
-    Execute-AAD -githubHandle $githubHandle -AzureCredentialsJson $AzureCredentialsJson -InitialPassword "HelloVSLIve!"
+    Execute-AAD -githubHandle $githubHandle -AzureCredentialsJson $AzureCredentialsJson -InitialPassword "HelloVSLive!"
 }
 
 
