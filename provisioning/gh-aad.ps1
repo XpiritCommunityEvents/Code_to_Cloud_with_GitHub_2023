@@ -29,9 +29,10 @@ function Execute-AAD
         $AzureCredentials = ConvertFrom-Json $AzureCredentialsJson
     
         az login --allow-no-subscriptions --service-principal -u $($AzureCredentials.clientId) -p $($AzureCredentials.clientSecret) --tenant $($AzureCredentials.tenantId)
+        $account = az account show | ConvertFrom-Json
         $userObject = CreateAADUser -githubHandle $githubHandle -InitialPassword $InitialPassword
         AddADUserToResourceGroup -ResourceGroup "rg-$($githubHandle)" -AADUserId $($userObject.id) -role "Owner"
-
+        az role assignment create --assignee-object-id $($userObject.id) --role "User Access Administrator" --scope /subscriptions/$($account.id)
     }    
 
 
