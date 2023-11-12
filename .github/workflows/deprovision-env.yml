@@ -39,6 +39,3 @@ jobs:
             done
 
 
-      - name: Logout of Azure
-        uses: azure/logout@v1
-
