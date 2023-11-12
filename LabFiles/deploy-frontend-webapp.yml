@@ -1,6 +1,5 @@
 name: Deployment globoticket Frontend
 env:
-  HomePage: ''
   appname: globoticket
   resourcegroup: globoticket
   slotname: staging
@@ -14,7 +13,8 @@ jobs:
     environment:
       name: 'staging'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+    outputs:
+      homepage: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     steps:
       - name: get release artifacts for deployment, picks data from latest release
         uses: dsaltares/fetch-gh-release-asset@master
@@ -42,10 +42,7 @@ jobs:
           app-name: '${{env.appname}}'
           slot-name: '${{env.slotname}}'
           package: ./frontend.zip
-      - name: Set homepage location for next job
-        run: |
-          echo "homepage=${{ steps.deploy-to-webapp.outputs.webapp-url }}" >> $GITHUB_OUTPUT
-          
+           
   validate:
     runs-on: ubuntu-latest
     needs: deploy
@@ -54,7 +51,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-
+      - name: print env
+        run: echo $homepage
+        env: 
+          homepage: ${{ needs.deploy.outputs.homepage }}        
       - name: Install playwright
         run:  npm init playwright@latest
           
@@ -68,18 +68,16 @@ jobs:
      
       - name: ensure deployment is healthy before we test
         run: |
-            HEALTH_ENDPOINT=  "${{ needs.deploy.outputs.homepage }}/health/ready"
-            while true; do
-              response=$(curl -s "$HEALTH_ENDPOINT")
-              status=$(echo "$response" | jq -r '.status')
-
-              if [[ "$status" == "Healthy" ]]; then
-                echo "Health endpoint current status :" $status
-                break
-              fi
+            response=$(curl -s "${homepage}/health/ready")
+            status=$(echo "$response" | jq -r '.status')
+  
+            while [[ "$status" != "Healthy" ]]; do
               echo "Waiting for health endpoint..."
               sleep 1
+              response=$(curl -s "${homepage}/health/ready")
+              status=$(echo "$response" | jq -r '.status')
             done
+            echo "Health endpoint current status :" $status
         env: 
           homepage: ${{ needs.deploy.outputs.homepage }}
       - name: Run tests
