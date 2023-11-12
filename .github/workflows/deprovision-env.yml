@@ -1,5 +1,5 @@
 
-name: Delete Resource Groups
+name: Deprovision Azure Resources
 
 on:
     workflow_dispatch:
