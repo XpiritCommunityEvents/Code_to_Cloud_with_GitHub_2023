@@ -68,7 +68,7 @@ jobs:
      
       - name: ensure deployment is healthy before we test
         run: |
-            HEALTH_ENDPOINT="https://globoticket-staging.azurewebsites.net/health/ready"
+            HEALTH_ENDPOINT=  "${{ needs.deploy.outputs.homepage }}/health/ready"
             while true; do
               response=$(curl -s "$HEALTH_ENDPOINT")
               status=$(echo "$response" | jq -r '.status')
