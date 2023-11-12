@@ -27,7 +27,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_DEPLOY }}
         
       - name: Create Deployment Slot Staging
         uses: Azure/cli@v1.0.7
@@ -93,7 +93,7 @@ jobs:
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_DEPLOY }}
     - name: TenPercent
       uses: Azure/cli@v1.0.7
       with:
@@ -108,7 +108,7 @@ jobs:
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_DEPLOY }}
     - name: TenPercent
       uses: Azure/cli@v1.0.7
       with:
@@ -122,7 +122,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_DEPLOY }}
       - name: vip swap
         uses: Azure/cli@v1.0.7
         with:
