@@ -34,7 +34,19 @@ jobs:
         with:
           inlineScript: |
             az webapp deployment slot create --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}}
-          
+      
+      - name: Set environment Variables catalog uri
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            az webapp config appsettings set --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}} --settings ApiConfigs__EventsCatalog__Uri="https://APPNAME-catalog.azurewebsites.net"
+      
+      - name: Set environment Variables ordering uri
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            az webapp config appsettings set --name ${{env.appname}} --resource-group ${{env.resourcegroup}} --slot ${{env.slotname}} --settings ApiConfigs__Ordering__Uri="https://APPNAME-ordering.azurewebsites.net"
+    
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
