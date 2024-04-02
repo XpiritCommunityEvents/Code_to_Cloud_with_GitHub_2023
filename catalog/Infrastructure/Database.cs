@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("GloboTicket.UnitTests")]
 namespace GloboTicket.Catalog.Infrastructure;
 
 internal static class Database

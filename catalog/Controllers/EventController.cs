@@ -38,4 +38,32 @@ public class EventController : ControllerBase
         var evt = await _eventRepository.GetEventById(id);
         return Ok(evt);
     }
+
+    [HttpPost(Name = "AddEvent")]
+    public async Task<IActionResult> AddEvent(Event @event)
+    {
+        var newEvent = await _eventRepository.AddEvent(@event);
+        return CreatedAtRoute("GetById", new { id = newEvent.EventId }, newEvent);
+    }
+
+    [HttpGet("artists", Name = "GetArtists")]
+    public async Task<IActionResult> GetArtists()
+    {
+        return Ok(await _eventRepository.GetArtists());
+    }
+
+    [HttpGet("artists/{id}", Name = "GetArtistById")]
+    public async Task<IActionResult> GetArtistById(Guid id)
+    {
+        var artist = await _eventRepository.GetArtistById(id);
+        return Ok(artist);
+    }
+
+    [HttpPost("artists", Name = "AddArtist")]
+    public async Task<IActionResult> AddArtist(Artist artist)
+    {
+        var newArtist = await _eventRepository.AddArtist(artist.Name, artist.Genre);
+        return CreatedAtRoute("GetArtistById", new { id = newArtist.Id }, newArtist);
+    }
+
 }

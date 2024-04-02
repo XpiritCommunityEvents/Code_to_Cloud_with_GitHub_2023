@@ -49,4 +49,20 @@ public class EventRepository : IEventRepository
     {
         return Task.FromResult((IEnumerable<Artist>)Database.Artists);
     }
+
+    public Task<Artist> GetArtistById(Guid artistId)
+    {
+        var artist = Database.Artists.FirstOrDefault(a => a.Id == artistId);
+        if (artist == null)
+        {
+            throw new InvalidOperationException("Artist not found");
+        }
+        return Task.FromResult(artist);
+    }
+
+    public Task<Event> AddEvent(Event @event)
+    {
+        Database.Events.Add(@event);
+        return Task.FromResult(@event);
+    }
 }
